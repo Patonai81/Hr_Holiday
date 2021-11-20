@@ -20,5 +20,10 @@ public class Boss extends Employee {
     @EqualsAndHashCode.Exclude List<Employee> employees;
 
     @NonNull
-    @EqualsAndHashCode.Exclude private String department;
+    @EqualsAndHashCode.Exclude private String managerPositionName;
+
+    public Boss(@NonNull String employeeName, @NonNull String managerPositionName) {
+        super(employeeName);
+        this.managerPositionName = managerPositionName;
+    }
 }

@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 //@NamedEntityGraph(name = "Company.companyWithEmployees", attributeNodes = {@NamedAttributeNode(value = "employeesList"), @NamedAttributeNode(value = "companyTypeFromDB")})
 @Entity(name = "HolidayRequest")
@@ -19,7 +20,9 @@ public class HolidayRequest {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @EqualsAndHashCode.Include Long holidayRequestId;
 
+    @NonNull
     @ManyToOne
+    @ToString.Exclude
     Employee employee;
 
     @NonNull
@@ -28,7 +31,8 @@ public class HolidayRequest {
     @NonNull
     LocalDate holidayEnd;
 
-    @NonNull
+    LocalDateTime creationTimestamp;
+
     @Enumerated(EnumType.STRING)
     HolidayRequestStatus holidayRequestStatus;
 }
