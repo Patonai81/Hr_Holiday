@@ -6,6 +6,7 @@ import hu.webuni.hrholiday.szabi.mapper.EmployeeMapper;
 import hu.webuni.hrholiday.szabi.model.Employee;
 import hu.webuni.hrholiday.szabi.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +27,11 @@ public class EmployeeRequestRestController {
     EmployeeMapper employeeMapper;
 
     @GetMapping
-    public List<EmployeeDto> findAllEmployees(@RequestParam(name = "fullList", required = false,defaultValue = "false") Boolean fullList){
+    public List<EmployeeDto> findAllEmployees( @RequestParam(name = "fullList", required = false,defaultValue = "false") Boolean fullList,
+                                               @RequestParam(name="sort") String sort,
+                                               Pageable pageable){
 
-        List<Employee> resultList= employeeService.findAllEmployees(fullList);
+        List<Employee> resultList= employeeService.findAllEmployees(fullList,pageable);
 
       if (fullList)
           return  employeeMapper.toEmployeeDtoListWithHolidayRequest(resultList);

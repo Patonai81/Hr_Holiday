@@ -5,6 +5,7 @@ import hu.webuni.hrholiday.szabi.model.HolidayRequest;
 import hu.webuni.hrholiday.szabi.model.HolidayRequestStatus;
 import hu.webuni.hrholiday.szabi.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -29,10 +30,10 @@ public class EmployeeService {
         return holidayRequest;
     }
 
-    public List<Employee> findAllEmployees(Boolean withHolidayRequest) {
+    public List<Employee> findAllEmployees(Boolean withHolidayRequest, Pageable pageable) {
         if (withHolidayRequest)
-            return employeeRepository.findAllWithHolidayRequests();
+            return employeeRepository.findAllWithHolidayRequests(pageable).getContent();
 
-        return employeeRepository.findAll();
+        return employeeRepository.findAll(pageable).getContent();
     }
 }

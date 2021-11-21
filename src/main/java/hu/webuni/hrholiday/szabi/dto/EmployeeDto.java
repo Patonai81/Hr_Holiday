@@ -1,9 +1,7 @@
 package hu.webuni.hrholiday.szabi.dto;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hu.webuni.hrholiday.szabi.model.Boss;
-import hu.webuni.hrholiday.szabi.model.HolidayRequest;
 import lombok.*;
 
 import java.util.List;
