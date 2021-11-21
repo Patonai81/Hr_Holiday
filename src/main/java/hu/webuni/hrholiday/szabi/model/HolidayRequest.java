@@ -23,7 +23,11 @@ public class HolidayRequest {
     @NonNull
     @ManyToOne
     @ToString.Exclude
-    Employee employee;
+    Employee employeeCreator;
+
+    @OneToOne
+    @ToString.Exclude
+    Boss acceptor;
 
     @NonNull
     LocalDate holidayStart;
@@ -35,6 +39,8 @@ public class HolidayRequest {
 
     @Enumerated(EnumType.STRING)
     HolidayRequestStatus holidayRequestStatus;
+
+
 }
 
 

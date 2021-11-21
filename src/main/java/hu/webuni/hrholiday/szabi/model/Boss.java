@@ -1,5 +1,6 @@
 package hu.webuni.hrholiday.szabi.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.DiscriminatorValue;

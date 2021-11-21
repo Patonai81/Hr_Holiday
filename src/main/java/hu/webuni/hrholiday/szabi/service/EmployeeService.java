@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class EmployeeService {
@@ -16,15 +17,22 @@ public class EmployeeService {
     EmployeeRepository employeeRepository;
 
     @Transactional
-    public Employee createEmployee(Employee employee){
-        Employee employeeSaved= employeeRepository.save(employee);
+    public Employee createEmployee(Employee employee) {
+        Employee employeeSaved = employeeRepository.save(employee);
         return employeeSaved;
     }
 
 
     @Transactional
     public HolidayRequest modifyHolidayRequest(HolidayRequest holidayRequest, HolidayRequestStatus holidayRequestStatus) {
-    holidayRequest.setHolidayRequestStatus(holidayRequestStatus);
-    return holidayRequest;
+        holidayRequest.setHolidayRequestStatus(holidayRequestStatus);
+        return holidayRequest;
+    }
+
+    public List<Employee> findAllEmployees(Boolean withHolidayRequest) {
+        if (withHolidayRequest)
+            return employeeRepository.findAllWithHolidayRequests();
+
+        return employeeRepository.findAll();
     }
 }

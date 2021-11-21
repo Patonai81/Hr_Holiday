@@ -28,7 +28,7 @@ public class HolidayRequestService {
     @Transactional
     public HolidayRequest createHolidayRequest(HolidayRequest holidayRequest) {
 
-        Employee employeeFromRepo = employeeRepository.findById(holidayRequest.getEmployee().getEmployeeId()).orElseThrow(() -> new EmployeeCannotBeFoundException(CUSTOMER_NOT_FOUND));
+        Employee employeeFromRepo = employeeRepository.findById(holidayRequest.getEmployeeCreator().getEmployeeId()).orElseThrow(() -> new EmployeeCannotBeFoundException(CUSTOMER_NOT_FOUND));
         employeeFromRepo.getHolidayRequestsList().add(holidayRequest);
         holidayRequest.setHolidayRequestStatus(HolidayRequestStatus.CREATED);
         holidayRequest.setCreationTimestamp(LocalDateTime.now());
@@ -50,6 +50,7 @@ public class HolidayRequestService {
 
         return holidayRequestFromRepo;
     }
+
 
 
 }
