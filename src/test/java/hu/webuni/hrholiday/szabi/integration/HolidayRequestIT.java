@@ -66,7 +66,7 @@ public class HolidayRequestIT {
         HolidayRequest holidayRequestFromRepo = holidayRequestService.createHolidayRequest(holidayRequest);
 
         holidayRequestFromRepo.setHolidayRequestStatus(HolidayRequestStatus.DENIED);
-        holidayRequestService.updateRequest(holidayRequestFromRepo);
+        holidayRequestService.updateHolidayRequest(holidayRequestFromRepo);
 
 
     }
@@ -76,7 +76,7 @@ public class HolidayRequestIT {
         List<HolidayRequest> holidayRequestList = holidayRequestRepository.findHolidayRequestByStatus(HolidayRequestStatus.CREATED);
         HolidayRequest tesztRequest = holidayRequestList.get(0);
         tesztRequest.setHolidayRequestStatus(HolidayRequestStatus.ACCEPTED);
-        HolidayRequest holidayRequestFromRepo = holidayRequestService.updateRequest(tesztRequest);
+        HolidayRequest holidayRequestFromRepo = holidayRequestService.updateHolidayRequest(tesztRequest);
         assertThat(holidayRequestFromRepo.getHolidayRequestStatus()).isEqualTo(HolidayRequestStatus.ACCEPTED);
     }
 
@@ -87,7 +87,7 @@ public class HolidayRequestIT {
         tesztRequest.setHolidayRequestStatus(HolidayRequestStatus.ACCEPTED);
 
         assertThatThrownBy(() -> {
-            HolidayRequest holidayRequestFromRepo = holidayRequestService.updateRequest(tesztRequest);
+            HolidayRequest holidayRequestFromRepo = holidayRequestService.updateHolidayRequest(tesztRequest);
         }).isInstanceOf(HolidayRequestCannotBeUpdatedException.class);
 
     }

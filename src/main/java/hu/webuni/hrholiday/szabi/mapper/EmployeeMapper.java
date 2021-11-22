@@ -2,10 +2,8 @@ package hu.webuni.hrholiday.szabi.mapper;
 
 import hu.webuni.hrholiday.szabi.dto.BossDto;
 import hu.webuni.hrholiday.szabi.dto.EmployeeDto;
-import hu.webuni.hrholiday.szabi.dto.HolidayRequestDto;
 import hu.webuni.hrholiday.szabi.model.Boss;
 import hu.webuni.hrholiday.szabi.model.Employee;
-import hu.webuni.hrholiday.szabi.model.HolidayRequest;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,7 +11,7 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = HolidayRequestMapper.class)
 public interface EmployeeMapper {
 
 
@@ -42,10 +40,6 @@ public interface EmployeeMapper {
     @Mapping(target = "holidayRequestsList", qualifiedByName = "WTH")
     BossDto toBossDtoWith(Boss boss);
 
-    @Named("WTH")
-    @Mapping(target = "employeeCreator", ignore = true)
-    @Mapping(target = "acceptor.employees", ignore = true)
-    HolidayRequestDto toHolidayRequestDto(HolidayRequest holidayRequest);
 
 
 // ONLY EMPLOYEE

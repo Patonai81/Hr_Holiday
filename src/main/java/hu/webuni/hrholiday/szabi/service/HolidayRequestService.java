@@ -49,7 +49,7 @@ public class HolidayRequestService {
     }
 
     @Transactional
-    public HolidayRequest updateRequest(HolidayRequest holidayRequest) {
+    public HolidayRequest updateHolidayRequest(HolidayRequest holidayRequest) {
 
         HolidayRequest holidayRequestFromRepo = holidayRequestRepository.findById(holidayRequest.getHolidayRequestId()).orElseThrow(() -> new HolidayRequestCannotBeFoundException(HOLIDAY_NOT_FOUND));
         HolidayRequestStatus currentStatus = holidayRequestFromRepo.getHolidayRequestStatus();
@@ -57,7 +57,8 @@ public class HolidayRequestService {
         if (currentStatus == HolidayRequestStatus.DENIED || currentStatus == HolidayRequestStatus.ACCEPTED)
             throw new HolidayRequestCannotBeUpdatedException(HOLIDAY_NOT_MODIFY, currentStatus);
 
-        holidayRequestFromRepo = holidayRequestRepository.save(holidayRequest);
+        holidayRequestFromRepo.setHolidayRequestStatus(holidayRequest.getHolidayRequestStatus());
+        holidayRequestFromRepo.setAcceptor(holidayRequest.getAcceptor());
 
         return holidayRequestFromRepo;
     }

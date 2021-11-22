@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Entity(name = "HolidayRequest")
 @Table(name = "holidayRequest")
 @Data
-@RequiredArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 
@@ -20,7 +19,6 @@ public class HolidayRequest {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @EqualsAndHashCode.Include Long holidayRequestId;
 
-    @NonNull
     @ManyToOne
     @ToString.Exclude
     Employee employeeCreator;
@@ -29,10 +27,8 @@ public class HolidayRequest {
     @ToString.Exclude
     Boss acceptor;
 
-    @NonNull
     LocalDate holidayStart;
 
-    @NonNull
     LocalDate holidayEnd;
 
     LocalDateTime creationTimestamp;
@@ -41,6 +37,11 @@ public class HolidayRequest {
     HolidayRequestStatus holidayRequestStatus;
 
 
+    public HolidayRequest(Employee emp2, LocalDate of, LocalDate of1) {
+        this.employeeCreator=emp2;
+        this.holidayStart=of;
+        this.holidayEnd=of1;
+    }
 }
 
 

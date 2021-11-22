@@ -2,13 +2,18 @@ package hu.webuni.hrholiday.szabi.web.controller;
 
 import hu.webuni.hrholiday.szabi.dto.HolidayRequestDto;
 import hu.webuni.hrholiday.szabi.dto.HolidayRequestQuery;
-import hu.webuni.hrholiday.szabi.mapper.EmployeeMapper;
+import hu.webuni.hrholiday.szabi.mapper.HolidayRequestMapper;
 import hu.webuni.hrholiday.szabi.model.HolidayRequest;
 import hu.webuni.hrholiday.szabi.service.HolidayRequestService;
+import hu.webuni.hrholiday.szabi.web.controller.validator.HolidayRequestDtoUpdateValidator;
+import hu.webuni.hrholiday.szabi.web.exception.CustomErrorCodes;
+import hu.webuni.hrholiday.szabi.web.exception.HolidayRequestCannotBeUpdatedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,14 +27,32 @@ public class HolidayRequestRestController {
     HolidayRequestService holidayRequestService;
 
     @Autowired
-    EmployeeMapper employeeMapper;
+    HolidayRequestMapper holidayRequestMapper;
+
+    @Autowired
+    HolidayRequestDtoUpdateValidator holidayRequestDtoUpdateValidator;
 
 
-    @GetMapping("/obj")
+    @GetMapping()
     List<HolidayRequestDto> findHolidayRequest(@RequestBody HolidayRequestQuery holidayRequestQuery){
           List<HolidayRequest> holidayRequestPage = holidayRequestService.findHolidayRequestsBy(holidayRequestQuery);
-          return holidayRequestPage.stream().map(employeeMapper::toHolidayRequestDto).collect(Collectors.toList());
+          return holidayRequestPage.stream().map(holidayRequestMapper::toHolidayRequestDto).collect(Collectors.toList());
     }
 
+    @PostMapping
+    HolidayRequestDto createHolidayRequest(@RequestBody @Valid HolidayRequestDto holidayRequestDto){
+        return holidayRequestMapper.toHolidayRequestDto(holidayRequestService.createHolidayRequest(holidayRequestMapper.toHolidayRequest(holidayRequestDto)));
+    }
+
+    @PostMapping("/manageHolidayRequest")
+    HolidayRequestDto modifyRequest(@RequestBody HolidayRequestDto holidayRequestDto, BindingResult result){
+
+        holidayRequestDtoUpdateValidator.validate(holidayRequestDto,result);
+        if (result.hasErrors()){
+            throw new HolidayRequestCannotBeUpdatedException(CustomErrorCodes.HOLIDAY_NOT_MODIFY, holidayRequestDto.getHolidayRequestStatus());
+        }
+
+        return holidayRequestMapper.toHolidayRequestDto(holidayRequestService.updateHolidayRequest(holidayRequestMapper.toHolidayRequest(holidayRequestDto)));
+    }
 
 }

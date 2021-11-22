@@ -9,7 +9,6 @@ import javax.persistence.OneToMany;
 import java.util.List;
 
 @Data
-@RequiredArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 
@@ -20,7 +19,7 @@ public class Boss extends Employee {
     @OneToMany(mappedBy = "boss")
     @EqualsAndHashCode.Exclude List<Employee> employees;
 
-    @NonNull
+
     @EqualsAndHashCode.Exclude private String managerPositionName;
 
     public Boss(@NonNull String employeeName, @NonNull String managerPositionName) {

@@ -48,7 +48,7 @@ public class InitDBService {
         HolidayRequest holidayRequestFromRepo = holidayRequestService.createHolidayRequest(holidayRequest);
 
         holidayRequestFromRepo.setHolidayRequestStatus(HolidayRequestStatus.DENIED);
-        holidayRequestService.updateRequest(holidayRequestFromRepo);
+        holidayRequestService.updateHolidayRequest(holidayRequestFromRepo);
 
 
     }
