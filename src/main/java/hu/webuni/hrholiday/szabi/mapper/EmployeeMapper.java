@@ -17,6 +17,7 @@ import java.util.List;
 public interface EmployeeMapper {
 
 
+    @Named("WTH")
     @IterableMapping(qualifiedByName = "WTH")
     List<EmployeeDto> toEmployeeDtoListWithHolidayRequest(List<Employee> employeeList);
 
@@ -31,7 +32,7 @@ public interface EmployeeMapper {
     }
 
 
-    @Named("WTHA")
+    @Named("WTHW")
     @Mapping(target = "boss", ignore = true)
     @Mapping(target = "holidayRequestsList", qualifiedByName = "WTH")
     EmployeeDto toEmployeeDtoWith(Employee employee);
@@ -50,6 +51,7 @@ public interface EmployeeMapper {
 // ONLY EMPLOYEE
 
 
+    @Named("OE")
     @IterableMapping(qualifiedByName = "OE")
     List<EmployeeDto> toEmployeeDtoListWithoutHolidayRequest(List<Employee> employeeList);
 
@@ -63,17 +65,15 @@ public interface EmployeeMapper {
         return null;
     }
 
-
+    @Named("OES")
     @Mapping(target = "holidayRequestsList", ignore = true)
     @Mapping(target = "boss", ignore = true)
-    @Named("OEA")
     EmployeeDto toEmployeeDtoWithout(Employee employee);
 
+    @Named("OE")
     @Mapping(target = "employees", ignore = true)
     @Mapping(target = "holidayRequestsList", ignore = true)
-    @Named("OE")
     BossDto toBossDtoWithout(Boss boss);
-
 
 
     Employee toEmployee(EmployeeDto employeeDto);

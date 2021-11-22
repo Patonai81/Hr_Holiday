@@ -12,6 +12,7 @@ import java.util.List;
 public class BossDto extends EmployeeDto{
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     List<EmployeeDto> employees;
 
     @NonNull

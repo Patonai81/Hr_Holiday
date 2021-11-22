@@ -1,5 +1,6 @@
 package hu.webuni.hrholiday.szabi.service;
 
+import hu.webuni.hrholiday.szabi.dto.HolidayRequestQuery;
 import hu.webuni.hrholiday.szabi.model.Employee;
 import hu.webuni.hrholiday.szabi.model.HolidayRequest;
 import hu.webuni.hrholiday.szabi.model.HolidayRequestStatus;
@@ -9,6 +10,7 @@ import hu.webuni.hrholiday.szabi.web.exception.EmployeeCannotBeFoundException;
 import hu.webuni.hrholiday.szabi.web.exception.HolidayRequestCannotBeFoundException;
 import hu.webuni.hrholiday.szabi.web.exception.HolidayRequestCannotBeUpdatedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,6 +26,13 @@ public class HolidayRequestService {
 
     @Autowired
     EmployeeRepository employeeRepository;
+
+
+    @Transactional
+    public Page<HolidayRequest> findHolidayRequestsBy(HolidayRequestQuery query) {
+        return holidayRequestRepository.findAll(query.toSpecification(), query.getPageable());
+    }
+
 
     @Transactional
     public HolidayRequest createHolidayRequest(HolidayRequest holidayRequest) {

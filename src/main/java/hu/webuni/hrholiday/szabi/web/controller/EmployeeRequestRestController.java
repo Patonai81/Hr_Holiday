@@ -8,11 +8,9 @@ import hu.webuni.hrholiday.szabi.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController()
@@ -37,6 +35,11 @@ public class EmployeeRequestRestController {
           return  employeeMapper.toEmployeeDtoListWithHolidayRequest(resultList);
 
         return employeeMapper.toEmployeeDtoListWithoutHolidayRequest(resultList);
+    }
+
+    @PostMapping("/createEmployee")
+    public EmployeeDto createEmployee(@RequestBody @Valid EmployeeDto employeeDto){
+        return employeeMapper.toEmployeeDtoWithout(employeeService.createEmployee(employeeMapper.toEmployee(employeeDto)));
     }
 
 }
