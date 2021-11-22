@@ -30,8 +30,6 @@ public class HolidayRequestService {
 
     @Transactional
     public List<HolidayRequest> findHolidayRequestsBy(HolidayRequestQuery query) {
-        System.out.println("PageABLE:");
-        System.out.println(query.getPageable());
         return holidayRequestRepository.findAll(query.toSpecification(), query.getPageable()).getContent();
     }
 
