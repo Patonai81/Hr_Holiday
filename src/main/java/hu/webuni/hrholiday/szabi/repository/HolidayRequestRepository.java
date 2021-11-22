@@ -14,4 +14,4 @@ public interface HolidayRequestRepository extends JpaRepository<HolidayRequest,L
     @Query("select h from HolidayRequest  h where h.holidayRequestStatus= :holidayRequestStatus")
     public List<HolidayRequest> findHolidayRequestByStatus (HolidayRequestStatus holidayRequestStatus);
 
-}
+    }

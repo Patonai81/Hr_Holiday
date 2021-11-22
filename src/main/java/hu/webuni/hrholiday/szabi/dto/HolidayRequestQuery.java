@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -27,12 +26,11 @@ public class HolidayRequestQuery {
     private static final int DEFAULT_PAGE_NUMBER = 0;
     private static final int DEFAULT_PAGE_SIZE = 3;
     private static final Sort.Direction DEFAULT_SORT_DIRECTION = Sort.Direction.ASC;
-    private static final String DEFAULT_SORT_ORDER = "acceptorName";
+    private static final String DEFAULT_SORT_ORDER = "acceptor";
 
     private int page = DEFAULT_PAGE_NUMBER;
     private int size = DEFAULT_PAGE_SIZE;
     private String[] sort = {DEFAULT_SORT_ORDER + "," + DEFAULT_SORT_DIRECTION};
-
     private HolidayRequestStatus holidayRequestStatus;
     private String acceptorName;
     private String requestorName;
@@ -55,6 +53,7 @@ public class HolidayRequestQuery {
     }
 
     private List<Sort.Order> createSortingList() {
+
         List<Sort.Order> sortingList = new LinkedList<>();
         Arrays.stream(sort).forEach(item -> {
                     String[] sorted = item.split(",");
@@ -71,6 +70,7 @@ public class HolidayRequestQuery {
                 }
         );
         return sortingList;
+
     }
 
 }

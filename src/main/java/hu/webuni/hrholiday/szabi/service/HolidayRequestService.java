@@ -10,11 +10,11 @@ import hu.webuni.hrholiday.szabi.web.exception.EmployeeCannotBeFoundException;
 import hu.webuni.hrholiday.szabi.web.exception.HolidayRequestCannotBeFoundException;
 import hu.webuni.hrholiday.szabi.web.exception.HolidayRequestCannotBeUpdatedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static hu.webuni.hrholiday.szabi.web.exception.CustomErrorCodes.*;
 
@@ -29,8 +29,10 @@ public class HolidayRequestService {
 
 
     @Transactional
-    public Page<HolidayRequest> findHolidayRequestsBy(HolidayRequestQuery query) {
-        return holidayRequestRepository.findAll(query.toSpecification(), query.getPageable());
+    public List<HolidayRequest> findHolidayRequestsBy(HolidayRequestQuery query) {
+        System.out.println("PageABLE:");
+        System.out.println(query.getPageable());
+        return holidayRequestRepository.findAll(query.toSpecification(), query.getPageable()).getContent();
     }
 
 

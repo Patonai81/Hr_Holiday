@@ -30,9 +30,9 @@ public class Employee {
     @EqualsAndHashCode.Exclude List<HolidayRequest> holidayRequestsList;
 
     @NonNull
-    @Column(name = "Name")
     @EqualsAndHashCode.Exclude
     private String employeeName;
+
 
     @ManyToOne
     @EqualsAndHashCode.Exclude
