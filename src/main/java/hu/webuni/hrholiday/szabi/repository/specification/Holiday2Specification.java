@@ -23,8 +23,8 @@ public class Holiday2Specification implements Specification<HolidayRequest> {
     public javax.persistence.criteria.Predicate toPredicate(Root<HolidayRequest> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
 
         List<Predicate> predicates = new LinkedList<>();
-        //  Join<HolidayRequest, Employee> requestEmployeeJoin = root.join(HolidayRequest_.employeeCreator, JoinType.LEFT);
-        //  root.fetch(HolidayRequest_.employeeCreator, JoinType.LEFT);
+      //  Join<HolidayRequest, Employee> requestEmployeeJoin = root.join(HolidayRequest_.employeeCreator, JoinType.LEFT);
+      //  root.fetch(HolidayRequest_.employeeCreator, JoinType.LEFT);
 
         if (holidayRequestQuery.getHolidayRequestStatus() != null) {
             predicates.add(criteriaBuilder.equal(root.get(HolidayRequest_.holidayRequestStatus), holidayRequestQuery.getHolidayRequestStatus()));
