@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.*;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +38,7 @@ public class Holiday2Specification implements Specification<HolidayRequest> {
         }
 
         if (Objects.nonNull(holidayRequestQuery.getCreation_from())){
-            predicates.add(criteriaBuilder.between(root.get(HolidayRequest_.creationTimestamp), holidayRequestQuery.getCreation_from(), holidayRequestQuery.getCreation_to());
+            predicates.add(criteriaBuilder.between(root.get(HolidayRequest_.creationTimestamp).as(LocalDate.class), holidayRequestQuery.getCreation_from(), holidayRequestQuery.getCreation_to()));
 
         }
 
