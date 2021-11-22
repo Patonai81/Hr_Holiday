@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.LinkedList;
@@ -38,16 +39,32 @@ public class Holiday2Specification implements Specification<HolidayRequest> {
             predicates.add(criteriaBuilder.like(root.get(HolidayRequest_.employeeCreator).get(Employee_.employeeName), holidayRequestQuery.getRequestorName() + "%"));
         }
 
+        if (Objects.isNull(holidayRequestQuery.getCreation_to())&& Objects.nonNull(holidayRequestQuery.getCreation_from())){
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(HolidayRequest_.creationTimestamp).as(LocalDate.class), holidayRequestQuery.getCreation_from()));
+        }
+        if (Objects.isNull(holidayRequestQuery.getCreation_from())&& Objects.nonNull(holidayRequestQuery.getCreation_to())){
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(HolidayRequest_.creationTimestamp).as(LocalDate.class),holidayRequestQuery.getCreation_to()));
+        }
+        if (Objects.nonNull(holidayRequestQuery.getCreation_from()) && Objects.nonNull(holidayRequestQuery.getCreation_to())){
+            predicates.add(criteriaBuilder.between(root.get(HolidayRequest_.creationTimestamp).as(LocalDate.class), holidayRequestQuery.getCreation_from(), holidayRequestQuery.getCreation_to()));
+        }
+
+        /*
         if (Objects.nonNull(holidayRequestQuery.getCreation_from())) {
 
             predicates.add(criteriaBuilder.between(root.get(HolidayRequest_.creationTimestamp),
                     LocalDateTime.of(holidayRequestQuery.getCreation_from(), LocalTime.MIN),
                     LocalDateTime.of(holidayRequestQuery.getCreation_to(), LocalTime.MAX)));
 
+       */
+
+        //(StartA <= EndB) and (EndA >= StartB), csak akkor foglalkozunk vele, ha mindkét dátum adott
+        if (Objects.nonNull(holidayRequestQuery.getVacation_from()) && Objects.nonNull(holidayRequestQuery.getVacation_to())){
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(HolidayRequest_.holidayEnd), holidayRequestQuery.getVacation_from()));
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(HolidayRequest_.holidayStart), holidayRequestQuery.getVacation_to()));
         }
 
-
-        return criteriaQuery
+            return criteriaQuery
                 .where(criteriaBuilder.and(predicates.toArray(new Predicate[0])))
                 .distinct(true)
                 .getRestriction();
