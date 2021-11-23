@@ -11,6 +11,9 @@ public class CustomErrorCodes {
     public static final String HOLIDAY_NOT_FOUND_MESSAGE="Given holiday request not found in DB";
     public static final String HOLIDAY_NOT_MODIFY="HOLD_002";
     public static final String HOLIDAY_NOT_MODIFY_MESSAGE="Given holiday request cannot be modified";
+    public static final String QUERY_SHORT_NOT_OK="QUERY_001";
+    public static final String QUERY_SHORT_NOT_OK_MESSAGE="Given shorting condition is not appropriate";
+
 
 
     private static  HashMap<String,String> codeToMessage= new HashMap<>();
@@ -19,6 +22,7 @@ public class CustomErrorCodes {
         codeToMessage.put(CUSTOMER_NOT_FOUND,CUSTOMER_NOT_FOUND_MESSAGE);
         codeToMessage.put(HOLIDAY_NOT_FOUND,HOLIDAY_NOT_FOUND_MESSAGE);
         codeToMessage.put(HOLIDAY_NOT_MODIFY,HOLIDAY_NOT_MODIFY_MESSAGE);
+        codeToMessage.put(QUERY_SHORT_NOT_OK,QUERY_SHORT_NOT_OK_MESSAGE);
 
     }
 

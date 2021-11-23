@@ -6,8 +6,10 @@ import hu.webuni.hrholiday.szabi.mapper.HolidayRequestMapper;
 import hu.webuni.hrholiday.szabi.model.HolidayRequest;
 import hu.webuni.hrholiday.szabi.service.HolidayRequestService;
 import hu.webuni.hrholiday.szabi.web.controller.validator.HolidayRequestDtoUpdateValidator;
+import hu.webuni.hrholiday.szabi.web.controller.validator.HolidayRequestQueryValidator;
 import hu.webuni.hrholiday.szabi.web.exception.CustomErrorCodes;
 import hu.webuni.hrholiday.szabi.web.exception.HolidayRequestCannotBeUpdatedException;
+import hu.webuni.hrholiday.szabi.web.exception.HolidayRequestQueryNotSuitableException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -32,9 +34,14 @@ public class HolidayRequestRestController {
     @Autowired
     HolidayRequestDtoUpdateValidator holidayRequestDtoUpdateValidator;
 
+    @Autowired
+    HolidayRequestQueryValidator holidayRequestQueryValidator;
 
     @GetMapping()
-    List<HolidayRequestDto> findHolidayRequest(@RequestBody HolidayRequestQuery holidayRequestQuery){
+    List<HolidayRequestDto> findHolidayRequest(@RequestBody HolidayRequestQuery holidayRequestQuery,BindingResult bindingResult){
+        holidayRequestQueryValidator.validate(holidayRequestQuery,bindingResult);
+        if (bindingResult.hasErrors())
+            throw new HolidayRequestQueryNotSuitableException(CustomErrorCodes.QUERY_SHORT_NOT_OK,bindingResult.getFieldError("sort").getDefaultMessage());
           List<HolidayRequest> holidayRequestPage = holidayRequestService.findHolidayRequestsBy(holidayRequestQuery);
           return holidayRequestPage.stream().map(holidayRequestMapper::toHolidayRequestDto).collect(Collectors.toList());
     }
