@@ -22,7 +22,6 @@ public class EmployeeRelatedExceptionHandler {
 
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ErrorContainer> handleValidation(BindException e){
-        System.out.println(e);
         StringBuilder builder = new StringBuilder();
         e.getFieldErrors().stream().forEach( item -> {
             builder.append(item.getField()+":"+item.getDefaultMessage());
@@ -30,6 +29,12 @@ public class EmployeeRelatedExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorContainer("555", builder.toString()));
 
     }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErrorContainer> handleCustomerNotFound(NullPointerException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorContainer(e.getMessage(), e.getMessage()));
+    }
+
 
 
 }

@@ -4,9 +4,12 @@ import hu.webuni.hrholiday.szabi.model.Boss;
 import hu.webuni.hrholiday.szabi.model.Employee;
 import hu.webuni.hrholiday.szabi.model.HolidayRequest;
 import hu.webuni.hrholiday.szabi.model.HolidayRequestStatus;
+import hu.webuni.hrholiday.szabi.repository.EmployeeRepository;
+import hu.webuni.hrholiday.szabi.repository.HolidayRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 
 @Component
@@ -18,7 +21,18 @@ public class InitDBService {
     @Autowired
     HolidayRequestService holidayRequestService;
 
+    @Autowired
+    EmployeeRepository employeeRepository;
+
+    @Autowired
+    HolidayRequestRepository holidayRequestRepository;
+
+
     public void initDb() {
+        holidayRequestRepository.deleteAll();
+        employeeRepository.deleteAll();
+
+
         Boss emp1 = new Boss("Szabi Test Boss", "FloorManager");
         employeeService.createEmployee(emp1);
         Employee emp2 = new Employee("Réka Test");

@@ -24,7 +24,7 @@ public class EmployeeDto {
     @EqualsAndHashCode.Exclude
     @NonNull
     @NotNull
-    private String employeeName;
+    protected String employeeName;
 
     @EqualsAndHashCode.Exclude
     private BossDto boss;

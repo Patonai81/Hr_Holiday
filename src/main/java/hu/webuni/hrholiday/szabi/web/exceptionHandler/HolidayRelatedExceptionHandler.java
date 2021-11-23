@@ -11,14 +11,19 @@ import static hu.webuni.hrholiday.szabi.web.exception.CustomErrorCodes.getMessag
 @RestControllerAdvice
 public class HolidayRelatedExceptionHandler {
 
-    @ExceptionHandler({HolidayRequestCannotBeUpdatedException.class,HolidayRequestCannotBeFoundException.class})
-    public ResponseEntity<ErrorContainer> handleCustomerNotFound(EmployeeCannotBeFoundException e) {
+    @ExceptionHandler({HolidayRequestCannotBeUpdatedException.class})
+    public ResponseEntity<ErrorContainer> handleRequestCannotBeUpdated(HolidayRequestCannotBeUpdatedException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorContainer(getMessage(e.getCode()), e.getCode()));
     }
 
     @ExceptionHandler({HolidayRequestQueryNotSuitableException.class})
-    public ResponseEntity<ErrorContainer> handleCustomerNotFound(HolidayRequestQueryNotSuitableException e) {
+    public ResponseEntity<ErrorContainer> handleQueryNotSuitable(HolidayRequestQueryNotSuitableException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorContainer(e.getMessage(), e.getCode()));
+    }
+
+    @ExceptionHandler({HolidayRequestCannotBeFoundException.class})
+    public ResponseEntity<ErrorContainer> handleHolidayRequestCannotBeFOund(HolidayRequestCannotBeFoundException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorContainer(getMessage(e.getCode()), e.getCode()));
     }
 
 

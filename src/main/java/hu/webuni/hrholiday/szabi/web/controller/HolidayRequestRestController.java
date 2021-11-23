@@ -37,7 +37,7 @@ public class HolidayRequestRestController {
     @Autowired
     HolidayRequestQueryValidator holidayRequestQueryValidator;
 
-    @GetMapping()
+    @PostMapping("/find")
     List<HolidayRequestDto> findHolidayRequest(@RequestBody HolidayRequestQuery holidayRequestQuery,BindingResult bindingResult){
         holidayRequestQueryValidator.validate(holidayRequestQuery,bindingResult);
         if (bindingResult.hasErrors())

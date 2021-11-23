@@ -10,9 +10,11 @@ import java.io.Serializable;
 @RequiredArgsConstructor
 public class ErrorContainer implements Serializable {
 
-
-    @NonNull
     private String errorCode;
-    @NonNull
     private String errorMessage;
+
+    public ErrorContainer(String errorCode, String errorMessage) {
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+    }
 }

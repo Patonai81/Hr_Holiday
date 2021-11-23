@@ -20,4 +20,10 @@ public class BossDto extends EmployeeDto{
         super(employeeName);
         this.managerPositionName = managerPositionName;
     }
+    public BossDto(EmployeeDto employeeDto){
+        this.employeeId=employeeDto.employeeId;
+        this.employeeName= employeeDto.employeeName;
+        this.managerPositionName="BOSS";
+
+    }
 }
