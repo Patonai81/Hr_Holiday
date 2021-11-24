@@ -8,8 +8,7 @@ import hu.webuni.hrholiday.szabi.model.HolidayRequestStatus;
 import hu.webuni.hrholiday.szabi.service.InitDBService;
 import hu.webuni.hrholiday.szabi.web.exception.ErrorContainer;
 import org.assertj.core.api.Condition;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
@@ -24,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class HolidayRestControllerTest {
 
     @Autowired
@@ -33,11 +32,13 @@ public class HolidayRestControllerTest {
     @Autowired
     InitDBService initDBService;
 
-   @BeforeEach
-    public void initDb() {
+   @Order(1)
+   @Test
+    public void testInitDb() {
         initDBService.initDb();
     }
 
+    @Order(2)
     @Test
     public void testCreateEmployeePositive() {
 
@@ -57,6 +58,7 @@ public class HolidayRestControllerTest {
     }
 
 
+    @Order(3)
     @Test
     public void testCreateHolidayRequestPositive() {
 
@@ -90,8 +92,8 @@ public class HolidayRestControllerTest {
 
     }
 
-   // @Test
-    @Transactional
+    @Order(4)
+    @Test
     public void testAcceptHolidayRequestPositive() {
 
         //Acceptor boss
@@ -120,6 +122,7 @@ public class HolidayRestControllerTest {
 
     }
 
+    @Order(5)
     @Test
     public void testAcceptHolidayRequestNegative() {
 
@@ -145,6 +148,7 @@ public class HolidayRestControllerTest {
 
     }
 
+    @Order(6)
     @Test
     public void testFindHolidays_BYType() {
 
@@ -156,6 +160,7 @@ public class HolidayRestControllerTest {
         assertThat(holidayRequestList).hasSize(1);
     }
 
+    @Order(7)
      @Test
     public void testFindHolidays_BYTYPE_AND_CREATION_TIME_FROM() {
 
@@ -171,6 +176,7 @@ public class HolidayRestControllerTest {
                   .containsExactlyInAnyOrder(HolidayRequestStatus.CREATED,HolidayRequestStatus.CREATED,HolidayRequestStatus.CREATED);
     }
 
+    @Order(8)
      @Test
     public void testFindHolidays_BYTYPE_AND_VACATION_FROM_TO() {
 
