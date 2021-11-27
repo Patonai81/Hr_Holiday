@@ -8,8 +8,10 @@ import hu.webuni.hrholiday.szabi.model.HolidayRequestStatus;
 import hu.webuni.hrholiday.szabi.service.InitDBService;
 import hu.webuni.hrholiday.szabi.web.exception.ErrorContainer;
 import org.assertj.core.api.Condition;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -20,10 +22,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
-
+@AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class HolidayRestControllerTest {
 
     @Autowired
@@ -32,17 +35,13 @@ public class HolidayRestControllerTest {
     @Autowired
     InitDBService initDBService;
 
-   @Order(1)
-   @Test
+    @BeforeAll
     public void testInitDb() {
         initDBService.initDb();
     }
 
-    @Order(2)
     @Test
     public void testCreateEmployeePositive() {
-
-        initDBService.initDb();
 
         EmployeeDto employeeDto = new EmployeeDto();
         employeeDto.setEmployeeName("First Employee");
@@ -54,11 +53,9 @@ public class HolidayRestControllerTest {
                 .expectStatus()
                 .isOk();
 
-
     }
 
 
-    @Order(3)
     @Test
     public void testCreateHolidayRequestPositive() {
 
@@ -79,6 +76,7 @@ public class HolidayRestControllerTest {
     }
 
     //NullPointer váltódik ki a validálás során, amit nem tudok megfelelően kezelni
+    @Test
     public void testCreateHolidayRequestNegative() {
 
         EmployeeDto employeeDto = getEmployees().get(0);
@@ -92,12 +90,11 @@ public class HolidayRestControllerTest {
 
     }
 
-    @Order(4)
     @Test
     public void testAcceptHolidayRequestPositive() {
 
         //Acceptor boss
-        EmployeeDto employeeFromRepo =  getEmployees().get(1);
+        EmployeeDto employeeFromRepo = getEmployees().get(1);
 
         //Conditions
         HolidayRequestQuery query = new HolidayRequestQuery();
@@ -122,12 +119,11 @@ public class HolidayRestControllerTest {
 
     }
 
-    @Order(5)
     @Test
     public void testAcceptHolidayRequestNegative() {
 
         //Acceptor boss
-        EmployeeDto employeeFromRepo =  getEmployees().get(1);
+        EmployeeDto employeeFromRepo = getEmployees().get(1);
 
         //Conditions
         HolidayRequestQuery query = new HolidayRequestQuery();
@@ -148,7 +144,6 @@ public class HolidayRestControllerTest {
 
     }
 
-    @Order(6)
     @Test
     public void testFindHolidays_BYType() {
 
@@ -160,8 +155,7 @@ public class HolidayRestControllerTest {
         assertThat(holidayRequestList).hasSize(1);
     }
 
-    @Order(7)
-     @Test
+    @Test
     public void testFindHolidays_BYTYPE_AND_CREATION_TIME_FROM() {
 
         //Conditions
@@ -170,37 +164,31 @@ public class HolidayRestControllerTest {
         query.setCreation_from(LocalDate.of(2021, 9, 12));
 
         List<HolidayRequestDto> holidayRequestList = getHolidays(query);
-          assertThat(holidayRequestList)
-                  .hasSize(3)
-                  .extracting(HolidayRequestDto::getHolidayRequestStatus)
-                  .containsExactlyInAnyOrder(HolidayRequestStatus.CREATED,HolidayRequestStatus.CREATED,HolidayRequestStatus.CREATED);
+        assertThat(holidayRequestList)
+                .hasSize(3)
+                .extracting(HolidayRequestDto::getHolidayRequestStatus)
+                .containsExactlyInAnyOrder(HolidayRequestStatus.CREATED, HolidayRequestStatus.CREATED, HolidayRequestStatus.CREATED);
     }
 
-    @Order(8)
-     @Test
+    @Test
     public void testFindHolidays_BYTYPE_AND_VACATION_FROM_TO() {
 
         //Conditions
         HolidayRequestQuery query = new HolidayRequestQuery();
-        query.setVacation_from(LocalDate.of(2021, 4, 12));
-         query.setVacation_to(LocalDate.of(2021, 6, 22));
+        LocalDate vacation_from = LocalDate.of(2021, 4, 12);
+        query.setVacation_from(vacation_from);
+        LocalDate vacation_to = LocalDate.of(2021, 6, 22);
+        query.setVacation_to(vacation_to);
 
 
         List<HolidayRequestDto> holidayRequestList = getHolidays(query);
 
-         Condition<LocalDate> vacationCondtion = new Condition<LocalDate>(s -> s.isAfter(query.getVacation_from()), "fairy tale start");
+        assertThat(holidayRequestList).noneMatch(item ->
+                (item.getHolidayStart().isBefore(vacation_from) && item.getHolidayEnd().isBefore(vacation_from))
+                        || (item.getHolidayStart().isAfter(vacation_to) && item.getHolidayEnd().isAfter(vacation_to)));
 
-         //TODO befejezni
-         /*
-         assertThat(holidayRequestList)
-                .hasSize(2)
-                .satisfies(fairyTale);
 
-         */
     }
-
-
-
 
 
     // helper methods ---------------------------------------------------------

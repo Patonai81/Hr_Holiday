@@ -28,16 +28,20 @@ public class HolidayRequestDto {
     BossDto acceptor;
 
     @NotNull
-    @NonNull
     LocalDate holidayStart;
 
     @NotNull
-    @NonNull
     LocalDate holidayEnd;
 
     LocalDateTime creationTimestamp;
 
     @Enumerated(EnumType.STRING)
     HolidayRequestStatus holidayRequestStatus;
+
+    public HolidayRequestDto(EmployeeDto emp2, LocalDate of, LocalDate of1) {
+        this.employeeCreator=emp2;
+        this.holidayStart=of;
+        this.holidayEnd=of1;
+    }
 
 }
