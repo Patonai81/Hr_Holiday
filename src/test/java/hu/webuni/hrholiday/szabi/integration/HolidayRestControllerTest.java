@@ -165,9 +165,9 @@ public class HolidayRestControllerTest {
 
         List<HolidayRequestDto> holidayRequestList = getHolidays(query);
         assertThat(holidayRequestList)
-                .hasSize(3)
+                .hasSize(5)
                 .extracting(HolidayRequestDto::getHolidayRequestStatus)
-                .containsExactlyInAnyOrder(HolidayRequestStatus.CREATED, HolidayRequestStatus.CREATED, HolidayRequestStatus.CREATED);
+                .containsExactlyInAnyOrder(HolidayRequestStatus.CREATED, HolidayRequestStatus.CREATED, HolidayRequestStatus.CREATED,HolidayRequestStatus.CREATED,HolidayRequestStatus.CREATED);
     }
 
     @Test
@@ -210,9 +210,8 @@ public class HolidayRestControllerTest {
 
 
         EntityExchangeResult<List<HolidayRequestDto>> result = webClient.post().uri(uriBuilder ->
-                        uriBuilder
+                                uriBuilder
                                 .path("/api/holidayRequest/find")
-                                .queryParam("sort", "employeeName")
                                 .build())
                 .bodyValue(query)
                 .exchange()

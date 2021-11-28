@@ -20,8 +20,14 @@ public class HolidayRequestQueryValidator implements Validator {
         return HolidayRequestQuery.class.isAssignableFrom(clazz);
     }
 
+    //Bemeneti keresés validáció, ha lesz még reá szükség, a régit átneveztem.
     @Override
     public void validate(Object target, Errors errors) {
+        return;
+    }
+
+
+    public void validateOld(Object target, Errors errors) {
         HolidayRequestQuery holidayRequestQuery = (HolidayRequestQuery) target;
 
         if (!Arrays.stream(holidayRequestQuery.getSort()).allMatch(item -> {

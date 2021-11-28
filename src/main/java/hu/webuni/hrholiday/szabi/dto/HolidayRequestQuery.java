@@ -1,6 +1,7 @@
 package hu.webuni.hrholiday.szabi.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hu.webuni.hrholiday.szabi.model.HolidayRequest;
 import hu.webuni.hrholiday.szabi.model.HolidayRequestStatus;
 import hu.webuni.hrholiday.szabi.repository.specification.Holiday2Specification;
@@ -26,11 +27,11 @@ public class HolidayRequestQuery {
     private static final int DEFAULT_PAGE_NUMBER = 0;
     private static final int DEFAULT_PAGE_SIZE = 3;
     private static final Sort.Direction DEFAULT_SORT_DIRECTION = Sort.Direction.ASC;
-    private static final String DEFAULT_SORT_ORDER = "acceptor";
+    private static final String DEFAULT_SORT_PROPERTY = "acceptor";
 
     private int page = DEFAULT_PAGE_NUMBER;
     private int size = DEFAULT_PAGE_SIZE;
-    private String[] sort = {DEFAULT_SORT_ORDER + "," + DEFAULT_SORT_DIRECTION};
+    private String[] sort = {DEFAULT_SORT_PROPERTY + "," + DEFAULT_SORT_DIRECTION};
     private HolidayRequestStatus holidayRequestStatus;
     private String acceptorName;
     private String requestorName;
@@ -38,6 +39,8 @@ public class HolidayRequestQuery {
     private LocalDate creation_to;
     private LocalDate vacation_from;
     private LocalDate vacation_to;
+    @JsonIgnore
+    private Pageable pageable;
 
 
     public Specification<HolidayRequest> toSpecification() {
@@ -45,11 +48,14 @@ public class HolidayRequestQuery {
     }
 
     public Pageable getPageable() {
+        if (pageable == null) {
+            pageable = PageRequest.of(DEFAULT_PAGE_NUMBER,DEFAULT_PAGE_SIZE,Sort.by(DEFAULT_SORT_DIRECTION,DEFAULT_SORT_PROPERTY));
+        }
+        return this.pageable;
+    }
 
-        return PageRequest.of(
-                page,
-                size,
-                Sort.by(createSortingList()));
+    public void setPageable(Pageable pageable) {
+        this.pageable = pageable;
     }
 
     private List<Sort.Order> createSortingList() {
