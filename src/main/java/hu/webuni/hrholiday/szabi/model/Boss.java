@@ -17,13 +17,15 @@ import java.util.List;
 public class Boss extends Employee {
 
     @OneToMany(mappedBy = "boss")
-    @EqualsAndHashCode.Exclude List<Employee> employees;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    List<Employee> employees;
 
 
     @EqualsAndHashCode.Exclude private String managerPositionName;
 
-    public Boss(@NonNull String employeeName, @NonNull String managerPositionName) {
-        super(employeeName);
+    public Boss(@NonNull String employeeName, @NonNull String userName, @NonNull String password,@NonNull String managerPositionName) {
+        super(employeeName,userName,password);
         this.managerPositionName = managerPositionName;
     }
 }

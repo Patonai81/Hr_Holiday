@@ -7,6 +7,7 @@ import hu.webuni.hrholiday.szabi.model.HolidayRequestStatus;
 import hu.webuni.hrholiday.szabi.repository.EmployeeRepository;
 import hu.webuni.hrholiday.szabi.repository.HolidayRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -27,19 +28,22 @@ public class InitDBService {
     @Autowired
     HolidayRequestRepository holidayRequestRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public void initDb() {
         holidayRequestRepository.deleteAll();
         employeeRepository.deleteAll();
 
 
-        Boss emp1 = new Boss("Szabi Test Boss", "FloorManager");
+        Boss emp1 = new Boss("Szabi Test Boss","Szabi", passwordEncoder.encode("Szabi"), "FloorManager");
         employeeService.createEmployee(emp1);
-        Employee emp2 = new Employee("Réka Test");
+
+        Employee emp2 = new Employee("Réka Test","Reka", passwordEncoder.encode("Reka"));
         emp2.setBoss(emp1);
         employeeService.createEmployee(emp2);
 
-        Employee emp3 = new Employee("Bori Test");
+        Employee emp3 = new Employee("Bori Test","Bori", passwordEncoder.encode("Bori"));
         emp3.setBoss(emp1);
         employeeService.createEmployee(emp3);
 
