@@ -14,6 +14,7 @@ public interface HolidayRequestMapper {
     @Named("WTH")
     @Mapping(target = "employeeCreator", qualifiedByName = "HR")
     @Mapping(target = "acceptor.employees", ignore = true)
+    @Mapping(target = "acceptor.holidayRequestsList", ignore = true)
     HolidayRequestDto toHolidayRequestDto(HolidayRequest holidayRequest);
 
     @Named("HR")

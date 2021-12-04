@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -46,7 +47,10 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers(HttpMethod.GET,"/api/holidayRequest/**").hasAnyAuthority("User","Admin").anyRequest().authenticated();
+                .authorizeRequests().antMatchers(HttpMethod.GET,"/api/holidayRequest/**").hasAnyAuthority("User","Admin")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.POST,"/api/holidayRequest/**").hasAnyAuthority("User","Admin")
+                .anyRequest().denyAll();
     }
 
     @Bean
