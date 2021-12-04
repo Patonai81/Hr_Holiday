@@ -31,6 +31,8 @@ public class HolidayRequestService {
     @Autowired
     EmployeeRepository employeeRepository;
 
+    @Autowired
+    UserSecurityService userSecurityService;
 
     @Transactional
     public List<HolidayRequest> findHolidayRequestsBy(HolidayRequestQuery query) {
@@ -53,10 +55,8 @@ public class HolidayRequestService {
 
     @Transactional
     public HolidayRequest updateHolidayRequest(HolidayRequest holidayRequest) {
-        System.out.println("DONE");
         HolidayRequest holidayRequestFromRepo = holidayRequestRepository.findById(holidayRequest.getHolidayRequestId()).orElseThrow(() -> new HolidayRequestCannotBeFoundException(HOLIDAY_NOT_FOUND));
         if (null != SecurityContextHolder.getContext().getAuthentication() && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
-            Employee authenticatedEmployee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             //A lezártak nem módosíthatók semmiképp
             HolidayRequestStatus currentStatus = holidayRequestFromRepo.getHolidayRequestStatus();
@@ -64,7 +64,7 @@ public class HolidayRequestService {
                 throw new HolidayRequestCannotBeUpdatedException(HOLIDAY_NOT_MODIFY, currentStatus);
             //user módosítja a sajátját
             if (holidayRequest.getHolidayRequestStatus() == HolidayRequestStatus.DELETED) {
-                if (holidayRequestFromRepo.getEmployeeCreator().getUsername() != authenticatedEmployee.getUsername())
+                if (holidayRequestFromRepo.getEmployeeCreator().getUsername() != userSecurityService.getAuthenticatedUserName())
                     throw new HolidayRequestCannotBeUpdatedException("User has no right to update", holidayRequest.getHolidayRequestStatus());
                 else {
                     holidayRequestFromRepo.setHolidayRequestStatus(holidayRequest.getHolidayRequestStatus());
@@ -75,7 +75,7 @@ public class HolidayRequestService {
                 Boss boss =  holidayRequestFromRepo.getEmployeeCreator().getBoss();
 
                 while (null != boss) {
-                    if (authenticatedEmployee.getEmployeeId().equals(boss.getEmployeeId())) {
+                    if (userSecurityService.getAuthenticatedUserId().equals(boss.getEmployeeId())) {
                         holidayRequestFromRepo.setAcceptor(boss);
                         holidayRequestFromRepo.setHolidayRequestStatus(holidayRequest.getHolidayRequestStatus());
                         return holidayRequestFromRepo;
