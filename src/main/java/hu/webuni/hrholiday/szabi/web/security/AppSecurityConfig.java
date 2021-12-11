@@ -50,6 +50,10 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers(HttpMethod.GET,"/api/holidayRequest/**").hasAnyAuthority("User","Admin")
                 .and()
                 .authorizeRequests().antMatchers(HttpMethod.POST,"/api/holidayRequest/**").hasAnyAuthority("User","Admin")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.POST,"/api/employee/**").hasAnyAuthority("User","Admin")
+                .and()
+                .authorizeRequests().antMatchers(HttpMethod.GET,"/api/employee/**").hasAnyAuthority("User","Admin")
                 .anyRequest().denyAll();
     }
 

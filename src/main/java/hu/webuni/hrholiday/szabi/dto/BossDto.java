@@ -24,6 +24,8 @@ public class BossDto extends EmployeeDto{
         this.employeeId=employeeDto.employeeId;
         this.employeeName= employeeDto.employeeName;
         this.managerPositionName="BOSS";
+        this.username= employeeDto.getUsername();
+        this.password=employeeDto.getPassword();
 
     }
 }

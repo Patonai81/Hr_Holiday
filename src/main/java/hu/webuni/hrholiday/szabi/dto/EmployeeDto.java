@@ -27,6 +27,13 @@ public class EmployeeDto {
     protected String employeeName;
 
     @EqualsAndHashCode.Exclude
-    private BossDto boss;
+    protected BossDto boss;
+
+
+    @EqualsAndHashCode.Exclude protected String username;
+
+
+    @EqualsAndHashCode.Exclude protected String password;
+
 
 }

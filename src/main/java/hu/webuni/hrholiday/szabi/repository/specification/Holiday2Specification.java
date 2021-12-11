@@ -31,6 +31,18 @@ public class Holiday2Specification implements Specification<HolidayRequest> {
             predicates.add(criteriaBuilder.equal(root.get(HolidayRequest_.holidayRequestStatus), holidayRequestQuery.getHolidayRequestStatus()));
         }
 
+        /*
+        public static Specification<Employee> hasCompany(String companyName) {
+ 		return (root, cq, cb) -> {
+ 			root.fetch(Employee_.company, JoinType.LEFT);
+ 			root.fetch(Employee_.position, JoinType.LEFT);
+ 			return cb.like(cb.lower(root.get(Employee_.company).get(Company_.name)), (companyName + "%").toLowerCase());
+ 		};
+ 		return (root, cq, cb) -> cb.like(cb.lower(root.get(Employee_.company).get(Company_.name)), (companyName + "%").toLowerCase());
+ 	}
+
+         */
+
         if (StringUtils.hasText(holidayRequestQuery.getAcceptorName())) {
             predicates.add(criteriaBuilder.like(root.get(HolidayRequest_.acceptor).get(Boss_.employeeName), holidayRequestQuery.getAcceptorName() + "%"));
         }

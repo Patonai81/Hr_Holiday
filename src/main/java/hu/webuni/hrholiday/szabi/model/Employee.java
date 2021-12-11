@@ -33,6 +33,7 @@ public class Employee implements UserDetails {
 
 
     @OneToMany(mappedBy = "employeeCreator", fetch = FetchType.LAZY)
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude List<HolidayRequest> holidayRequestsList;
 
     @NonNull
@@ -52,7 +53,7 @@ public class Employee implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         //TODO egyenlőre mindenki Employee
-        return Arrays.asList(new SimpleGrantedAuthority("User"));
+        return Arrays.asList(new SimpleGrantedAuthority("User"),new SimpleGrantedAuthority("Admin"));
     }
 
     @Override

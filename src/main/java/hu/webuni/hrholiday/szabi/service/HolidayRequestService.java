@@ -12,6 +12,7 @@ import hu.webuni.hrholiday.szabi.web.exception.EmployeeCannotBeFoundException;
 import hu.webuni.hrholiday.szabi.web.exception.HolidayRequestCannotBeFoundException;
 import hu.webuni.hrholiday.szabi.web.exception.HolidayRequestCannotBeUpdatedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class HolidayRequestService {
     UserSecurityService userSecurityService;
 
     @Transactional
+    @PreAuthorize("hasAuthority('Admin')")
     public List<HolidayRequest> findHolidayRequestsBy(HolidayRequestQuery query) {
         return holidayRequestRepository.findAll(query.toSpecification(), query.getPageable()).getContent();
     }
