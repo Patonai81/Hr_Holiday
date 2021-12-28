@@ -16,7 +16,6 @@ public class UserSecurityService {
 
     }
 
-    //jelenleg a másik fentebbi 2 specifikusabb metódust használom
     public Employee getAuthenticatedEmployee(){
         return (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
