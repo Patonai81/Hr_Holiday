@@ -8,15 +8,16 @@ import org.springframework.stereotype.Service;
 public class UserSecurityService {
 
     public String getAuthenticatedUserName(){
-        return getPrincipalObject().getEmployeeName();
+        return getAuthenticatedEmployee().getEmployeeName();
     }
 
     public Long getAuthenticatedUserId(){
-        return getPrincipalObject().getEmployeeId();
+        return getAuthenticatedEmployee().getEmployeeId();
 
     }
 
-    private Employee getPrincipalObject(){
+    //jelenleg a másik fentebbi 2 specifikusabb metódust használom
+    public Employee getAuthenticatedEmployee(){
         return (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
