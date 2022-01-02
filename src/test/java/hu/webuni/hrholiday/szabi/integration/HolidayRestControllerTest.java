@@ -8,6 +8,7 @@ import hu.webuni.hrholiday.szabi.model.Employee;
 import hu.webuni.hrholiday.szabi.model.HolidayRequestStatus;
 import hu.webuni.hrholiday.szabi.repository.EmployeeRepository;
 import hu.webuni.hrholiday.szabi.service.InitDBService;
+import hu.webuni.hrholiday.szabi.service.UserSecurityService;
 import hu.webuni.hrholiday.szabi.web.exception.ErrorContainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,12 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,22 +48,27 @@ public class HolidayRestControllerTest {
     @Autowired
     EmployeeRepository employeeRepository;
 
-    private String userName="user";
-    private String password="pass";
+
+    @Autowired
+    UserSecurityService jwtService;
+
+    private static String TOKEN;
+
+
 
     @BeforeAll
     public void testInitDb() {
         initDBService.initDb();
-
-           if (employeeRepository.findEmployeeByUsername(userName).isEmpty()){
-               Employee employee = new Employee();
-               employee.setEmployeeName("Teszt");
-               employee.setUsername(userName);
-               employee.setPassword(passwordEncoder.encode(password));
-               employeeRepository.save(employee);
-           }
-
     }
+
+    @BeforeAll
+    public void createToken(){
+        Employee employee = employeeRepository.findEmployeeByUsername("Szabi").get();
+        employee.setAuthorities( Arrays.asList(new SimpleGrantedAuthority("User"),new SimpleGrantedAuthority("Admin")));
+        employee.setEmployeeId(10l);
+        TOKEN = jwtService.createJwtToken(employee);
+    }
+
 
 
     @Test
@@ -73,7 +81,7 @@ public class HolidayRestControllerTest {
 
         webClient.post()
                 .uri("/api/employee/createEmployee")
-                .headers(httpHeaders ->  httpHeaders.setBasicAuth(userName,password))
+                .headers(httpHeaders ->  httpHeaders.setBearerAuth(TOKEN))
                 .body(Mono.just(employeeDto), EmployeeDto.class)
                 .exchange()
                 .expectStatus()
@@ -92,7 +100,7 @@ public class HolidayRestControllerTest {
 
         webClient.post()
                 .uri("/api/holidayRequest")
-                .headers(httpHeaders ->  httpHeaders.setBasicAuth(userName,password))
+                .headers(httpHeaders ->  httpHeaders.setBearerAuth(TOKEN))
                 .bodyValue(holidayRequest)
                 .exchange()
                 .expectBody(HolidayRequestDto.class)
@@ -112,7 +120,7 @@ public class HolidayRestControllerTest {
 
         webClient.post()
                 .uri("/api/holidayRequest")
-                .headers(httpHeaders ->  httpHeaders.setBasicAuth(userName,password))
+                .headers(httpHeaders ->  httpHeaders.setBearerAuth(TOKEN))
                 .bodyValue(holidayRequest)
                 .exchange().expectStatus().isBadRequest().expectBody(ErrorContainer.class);
 
@@ -120,6 +128,7 @@ public class HolidayRestControllerTest {
 
     @Test
     public void testAcceptHolidayRequestPositive() {
+
 
         //Acceptor boss
         EmployeeDto employeeFromRepo = getEmployees().get(2);
@@ -136,7 +145,7 @@ public class HolidayRestControllerTest {
 
         webClient.post()
                 .uri("/api/holidayRequest/manageHolidayRequest")
-                .headers(httpHeaders ->  httpHeaders.setBasicAuth("Szabi","Szabi"))
+                .headers(httpHeaders ->  httpHeaders.setBearerAuth(TOKEN))
                 .bodyValue(holidayRequestDto)
                 .exchange()
                 .expectBody(HolidayRequestDto.class)
@@ -166,7 +175,7 @@ public class HolidayRestControllerTest {
 
         webClient.post()
                 .uri("/api/holidayRequest/manageHolidayRequest")
-                .headers(httpHeaders ->  httpHeaders.setBasicAuth("Szabi","Szabi"))
+                .headers(httpHeaders ->  httpHeaders.setBearerAuth(TOKEN))
                 .bodyValue(holidayRequestDto)
                 .exchange()
                 .expectBody(ErrorContainer.class);
@@ -194,9 +203,9 @@ public class HolidayRestControllerTest {
 
         List<HolidayRequestDto> holidayRequestList = getHolidays(query);
         assertThat(holidayRequestList)
-                .hasSize(5)
+                .hasSize(6)
                 .extracting(HolidayRequestDto::getHolidayRequestStatus)
-                .containsExactlyInAnyOrder(HolidayRequestStatus.CREATED, HolidayRequestStatus.CREATED, HolidayRequestStatus.CREATED,HolidayRequestStatus.CREATED,HolidayRequestStatus.CREATED);
+                .containsExactlyInAnyOrder(HolidayRequestStatus.CREATED, HolidayRequestStatus.CREATED, HolidayRequestStatus.CREATED,HolidayRequestStatus.CREATED,HolidayRequestStatus.CREATED,HolidayRequestStatus.CREATED);
     }
 
     @Test
@@ -229,7 +238,7 @@ public class HolidayRestControllerTest {
                                 .queryParam("fullList","true")
                                 .queryParam("sort", "employeeName")
                                 .build())
-                .headers(httpHeaders ->  httpHeaders.setBasicAuth(userName,password))
+                .headers(httpHeaders ->  httpHeaders.setBearerAuth(TOKEN))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(EmployeeDto.class)
@@ -244,7 +253,7 @@ public class HolidayRestControllerTest {
                                 uriBuilder
                                 .path("/api/holidayRequest/find")
                                 .build())
-                .headers(httpHeaders ->  httpHeaders.setBasicAuth(userName,password))
+                .headers(httpHeaders ->  httpHeaders.setBearerAuth(TOKEN))
                 .bodyValue(query)
                 .exchange()
                 .expectStatus().isOk()

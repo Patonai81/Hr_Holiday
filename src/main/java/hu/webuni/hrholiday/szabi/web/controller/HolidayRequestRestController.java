@@ -14,6 +14,7 @@ import hu.webuni.hrholiday.szabi.web.exception.HolidayRequestQueryNotSuitableExc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +64,6 @@ public class HolidayRequestRestController {
         if (result.hasErrors()){
             throw new HolidayRequestCannotBeUpdatedException(CustomErrorCodes.HOLIDAY_NOT_MODIFY, holidayRequestDto.getHolidayRequestStatus());
         }
-
         return holidayRequestMapper.toHolidayRequestDto(holidayRequestService.updateHolidayRequest(holidayRequestMapper.toHolidayRequest(holidayRequestDto)));
     }
 

@@ -1,0 +1,5 @@
+jwt:
+  secret: mySecret
+  algorythm: HMAC256
+  validity: 12
+  issuer: Szabi

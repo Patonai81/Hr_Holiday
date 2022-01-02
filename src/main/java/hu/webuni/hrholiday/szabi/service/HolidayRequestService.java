@@ -55,9 +55,11 @@ public class HolidayRequestService {
 
     @Transactional
     public HolidayRequest updateHolidayRequest(HolidayRequest holidayRequest) {
+        System.out.println("NA");
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+
         HolidayRequest holidayRequestFromRepo = holidayRequestRepository.findById(holidayRequest.getHolidayRequestId()).orElseThrow(() -> new HolidayRequestCannotBeFoundException(HOLIDAY_NOT_FOUND));
         if (null != SecurityContextHolder.getContext().getAuthentication() && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
-
             //A lezártak nem módosíthatók semmiképp
             HolidayRequestStatus currentStatus = holidayRequestFromRepo.getHolidayRequestStatus();
             if (currentStatus == HolidayRequestStatus.DENIED || currentStatus == HolidayRequestStatus.ACCEPTED)

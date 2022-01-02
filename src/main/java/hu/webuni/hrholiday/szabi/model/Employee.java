@@ -2,21 +2,23 @@ package hu.webuni.hrholiday.szabi.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 @Data
 @RequiredArgsConstructor
-@NoArgsConstructor
+
 @EqualsAndHashCode
-@JsonIgnoreProperties(value = { "holidayRequestsList" })
+@JsonIgnoreProperties(value = {"holidayRequestsList"})
 
 
 @Entity(name = "Employee")
@@ -29,31 +31,46 @@ public class Employee implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @EqualsAndHashCode.Include Long employeeId;
+    @EqualsAndHashCode.Include
+    Long employeeId;
 
 
     @OneToMany(mappedBy = "employeeCreator", fetch = FetchType.LAZY)
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude List<HolidayRequest> holidayRequestsList;
-
-    @NonNull
     @EqualsAndHashCode.Exclude
-    private String employeeName;
+    List<HolidayRequest> holidayRequestsList;
 
-    @NonNull
-    @EqualsAndHashCode.Exclude private String username;
-    @NonNull
-    @EqualsAndHashCode.Exclude private String password;
+    @EqualsAndHashCode.Exclude
+    public String employeeName;
+
+
+    @EqualsAndHashCode.Exclude
+    public String username;
+
+    @EqualsAndHashCode.Exclude
+    public String password;
 
 
     @ManyToOne
     @EqualsAndHashCode.Exclude
-    private Boss boss;
+    public Boss boss;
+
+    @Transient
+    private List<SimpleGrantedAuthority> authorities;
+
+    public Employee(String employeeName, String userName, String password) {
+        this.employeeName = employeeName;
+        this.username = userName;
+        this.password = password;
+    }
+
+    public void setAuthorities(List<SimpleGrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //TODO egyenlőre mindenki Employee
-        return Arrays.asList(new SimpleGrantedAuthority("User"),new SimpleGrantedAuthority("Admin"));
+        return authorities;
     }
 
     @Override
@@ -74,5 +91,15 @@ public class Employee implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "employeeId=" + employeeId +
+                ", employeeName='" + employeeName + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
